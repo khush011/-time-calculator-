@@ -1,0 +1,76 @@
+def add_time(start, duration,d=None):
+    q=start.split()
+    f=q[0].split(':')
+    f.append(q[1])           #f=['3', '00', 'PM'] #r is no. of times clock passed 12 #tt is int(f[0])+int(s[0])
+    s=duration.split(':')    #s=['3', '10']#nod=no. of days passed #nd=name of day(sunday etc.)
+    dow=['Sunday','Monday','Tuesday','Wednesday','Thrusday','Friday','Saturday']
+    #minutes-----------------------
+    if(int(f[1])+int(s[1])>60):
+        s[0]=str(int(s[0])+1)
+        f[1]=str(int(f[1])+int(s[1])-60).zfill(2)
+    elif(int(f[1])+int(s[1])<60):
+        f[1]=str(int(f[1])+int(s[1])).zfill(2)
+    else:
+        f[1]='00'
+        s[0]=str(int(s[0])+1) 
+    #minutes------------------------
+
+    #hours & days_later--------------------------
+    if(int(f[0])+int(s[0])<12):
+        f[0]=str(int(f[0])+int(s[0]))
+        r=0
+    else:
+        tt=int(f[0])+int(s[0])
+        if tt%12==0:
+            f[0]=str(12)
+        else:
+            f[0]=str(int(tt%12))
+        r=int(tt/12)
+    if r%2==0:
+        if r==0:
+            p=''
+            nod=0
+        else:
+            if r/2==1:
+                p='(next day)'
+                nod=1
+            else:
+                p="("+str(int(r/2))+" days later)"
+                nod=r/2
+    else:
+        if r==1:
+            if f[2]=="AM":
+                f[2]='PM'
+                p=''
+                nod=0
+            else:
+                f[2]='AM'
+                p='(next day)'
+                nod=1
+        else:
+            if f[2]=="AM":
+                f[2]='PM';p="("+str(int(r/2))+" days later)"
+                nod=int(r/2)
+            else:
+                f[2]='AM';p="("+str(int(r/2)+1)+" days later)"
+                nod=int(r/2)+1
+    if(d!=None):
+        for i in dow:
+            if i.lower()==d.lower():
+                pp=dow.index(i)+1
+                break
+        if pp+nod>7:
+            b=(pp+nod)%7
+            dn=dow[int(b)-1]
+        elif pp+nod<7:
+            dn=dow[pp+nod-1]
+        else:
+            dn=dow[pp-1]
+        f.insert(1,':');f.insert(3," ")
+        if p=="":
+            return("".join(f)+", "+dn)
+        return("".join(f)+", "+dn+' '+p)
+    f.insert(1,':');f.insert(3," ")
+    if p=="":
+        return("".join(f))
+    return("".join(f)+" "+p)
